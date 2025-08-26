@@ -1,13 +1,13 @@
 spring:
   data:
     elasticsearch:
-      uris: http://localhost:9200
+      uris: http://${ELASTICSEARCH_HOST:localhost}:${ELASTICSEARCH_PORT:9200}
       username: 
       password: 
-
+      
 elasticsearch:
-  host: localhost
-  port: 9200
+  host: ${ELASTICSEARCH_HOST:localhost}
+  port: ${ELASTICSEARCH_PORT:9200}
   scheme: http
 
 logging:
