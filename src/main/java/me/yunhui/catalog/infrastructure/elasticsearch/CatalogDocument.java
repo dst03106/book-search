@@ -1,7 +1,6 @@
-package me.yunhui.infrastructure;
+package me.yunhui.catalog.infrastructure.elasticsearch;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -9,8 +8,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Document(indexName = "books")
-public class BookDocument {
+@Document(indexName = "catalog")
+public class CatalogDocument {
 
     @Id
     private final String id;
@@ -36,18 +35,15 @@ public class BookDocument {
     @Field(type = FieldType.Keyword)
     private final String imageUrl;
 
-    @Field(type = FieldType.Text, analyzer = "standard")
-    private final String description;
-
-    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSS")
+    @Field(type = FieldType.Date, format = {}, pattern ="uuuu-MM-dd'T'HH:mm:ss.SSSSSS")
     private final LocalDateTime createdAt;
 
-    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSS")
+    @Field(type = FieldType.Date, format = {}, pattern ="uuuu-MM-dd'T'HH:mm:ss.SSSSSS")
     private final LocalDateTime updatedAt;
 
-    public BookDocument(String id, String title, String subtitle, String author, String isbn,
-                       String publisher, LocalDate published, String imageUrl, String description,
-                       LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CatalogDocument(String id, String title, String subtitle, String author, String isbn,
+                          String publisher, LocalDate published, String imageUrl,
+                          LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -56,7 +52,6 @@ public class BookDocument {
         this.publisher = publisher;
         this.published = published;
         this.imageUrl = imageUrl;
-        this.description = description;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -91,10 +86,6 @@ public class BookDocument {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public LocalDateTime getCreatedAt() {
