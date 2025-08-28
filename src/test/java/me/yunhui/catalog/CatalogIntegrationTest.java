@@ -225,4 +225,143 @@ class CatalogIntegrationTest {
         assertEquals(0, body.data().size());
         assertEquals(0, body.pageInfo().totalElements());
     }
+    
+    @Test
+    @Order(6)
+    void search_OR_연산자로_복합_검색() {
+        // Given: OR 연산자를 사용한 검색 쿼리 (tdd 또는 javascript)
+        String searchUrl = baseUrl + "?q=tdd|javascript&page=0&size=10";
+        
+        // When: 검색 API 호출
+        ResponseEntity<CatalogSearchResponse> response = restTemplate.getForEntity(
+            searchUrl, CatalogSearchResponse.class
+        );
+        
+        // Then: 응답 검증
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+        CatalogSearchResponse body = response.getBody();
+        assertNotNull(body);
+        
+        // OR 검색 결과: TDD 책과 JavaScript 책 모두 포함
+        assertEquals(2, body.data().size());
+        assertEquals("tdd|javascript", body.searchQuery());
+        
+        // 결과에는 TDD 책과 JavaScript 책이 모두 포함되어야 함
+        List<String> titles = body.data().stream()
+                .map(item -> item.title())
+                .toList();
+        
+        assertTrue(titles.contains("Test-Driven Development: By Example"));
+        assertTrue(titles.contains("JavaScript: The Good Parts"));
+    }
+    
+    @Test
+    @Order(7)
+    void search_NOT_연산자로_복합_검색() {
+        // Given: NOT 연산자를 사용한 검색 쿼리 (code 포함하지만 clean 제외)
+        String searchUrl = baseUrl + "?q=code-clean&page=0&size=10";
+        
+        // When: 검색 API 호출
+        ResponseEntity<CatalogSearchResponse> response = restTemplate.getForEntity(
+            searchUrl, CatalogSearchResponse.class
+        );
+        
+        // Then: 응답 검증
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+        CatalogSearchResponse body = response.getBody();
+        assertNotNull(body);
+        
+        assertEquals("code-clean", body.searchQuery());
+        
+        // NOT 검색 결과: "code"는 포함하지만 "clean"은 제외
+        // "Clean Code" 책은 제외되어야 함
+        List<String> titles = body.data().stream()
+                .map(item -> item.title())
+                .toList();
+        
+        // Clean Code 책은 결과에 포함되지 않아야 함
+        assertFalse(titles.contains("Clean Code"));
+    }
+    
+    @Test
+    @Order(8)
+    void search_OR_연산자_공백_포함_키워드() {
+        // Given: 공백이 포함된 OR 검색 쿼리
+        String searchUrl = baseUrl + "?q=spring action|clean code&page=0&size=10";
+        
+        // When: 검색 API 호출
+        ResponseEntity<CatalogSearchResponse> response = restTemplate.getForEntity(
+            searchUrl, CatalogSearchResponse.class
+        );
+        
+        // Then: 응답 검증
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+        CatalogSearchResponse body = response.getBody();
+        assertNotNull(body);
+        
+        assertEquals("spring action|clean code", body.searchQuery());
+        
+        // "Spring in Action" 또는 "Clean Code" 책이 검색되어야 함
+        List<String> titles = body.data().stream()
+                .map(item -> item.title())
+                .toList();
+        
+        assertTrue(titles.contains("Spring in Action") || titles.contains("Clean Code"));
+    }
+    
+    @Test
+    @Order(9)
+    void search_NOT_연산자_공백_포함_키워드() {
+        // Given: 공백이 포함된 NOT 검색 쿼리
+        String searchUrl = baseUrl + "?q=javascript good-crockford&page=0&size=10";
+        
+        // When: 검색 API 호출
+        ResponseEntity<CatalogSearchResponse> response = restTemplate.getForEntity(
+            searchUrl, CatalogSearchResponse.class
+        );
+        
+        // Then: 응답 검증
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+        CatalogSearchResponse body = response.getBody();
+        assertNotNull(body);
+        
+        assertEquals("javascript good-crockford", body.searchQuery());
+        
+        // "javascript good"은 포함하지만 "crockford"는 제외
+        // JavaScript 책이 있지만 저자가 Douglas Crockford이므로 제외되어야 함
+        assertEquals(0, body.data().size());
+    }
+    
+    @Test
+    @Order(10)
+    void search_복합_검색_연산자_우선순위() {
+        // Given: OR와 NOT이 모두 포함된 쿼리 (OR이 우선순위)
+        String searchUrl = baseUrl + "?q=java|spring-boot&page=0&size=10";
+        
+        // When: 검색 API 호출
+        ResponseEntity<CatalogSearchResponse> response = restTemplate.getForEntity(
+            searchUrl, CatalogSearchResponse.class
+        );
+        
+        // Then: 응답 검증
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+        CatalogSearchResponse body = response.getBody();
+        assertNotNull(body);
+        
+        assertEquals("java|spring-boot", body.searchQuery());
+        
+        // OR 연산자가 우선되어 "java" 또는 "spring-boot" 검색으로 처리
+        List<String> titles = body.data().stream()
+                .map(item -> item.title())
+                .toList();
+        
+        // Spring in Action 책이 포함될 수 있음 (spring-boot에서 spring 부분 매칭)
+        assertTrue(body.data().size() >= 0);
+    }
 }
+

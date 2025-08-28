@@ -64,3 +64,4 @@ public class CatalogQuery extends ValueObject {
                 '}';
     }
 }
+
