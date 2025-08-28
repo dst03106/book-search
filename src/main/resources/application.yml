@@ -13,4 +13,10 @@ elasticsearch:
 logging:
   level:
     org.elasticsearch: INFO
+    org:
+      elasticsearch:
+        client: DEBUG
+      apache:
+        http: DEBUG
     me.yunhui: DEBUG
+
