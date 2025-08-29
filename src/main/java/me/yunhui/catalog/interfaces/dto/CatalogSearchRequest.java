@@ -6,9 +6,6 @@ public record CatalogSearchRequest(
     Integer size
 ) {
     public CatalogSearchRequest {
-        if (q == null || q.isBlank()) {
-            throw new IllegalArgumentException("Query parameter 'q' is required");
-        }
         if (page == null || page < 0) {
             page = 0;
         }

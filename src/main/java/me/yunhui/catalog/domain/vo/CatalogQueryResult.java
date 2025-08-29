@@ -8,14 +8,6 @@ public record CatalogQueryResult(
     long totalCount
 ) {
     
-    public CatalogQueryResult {
-        if (items == null) {
-            throw new IllegalArgumentException("Items cannot be null");
-        }
-        if (totalCount < 0) {
-            throw new IllegalArgumentException("Total count cannot be negative");
-        }
-    }
     
     public boolean isEmpty() {
         return items.isEmpty();
