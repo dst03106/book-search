@@ -2,7 +2,7 @@ package me.yunhui.catalog.domain.service;
 
 import me.yunhui.catalog.domain.vo.CatalogQuery;
 import me.yunhui.catalog.domain.vo.Pagination;
-import me.yunhui.catalog.domain.vo.ParsedQuery;
+import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
 import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 
 public class CatalogSearchService {
@@ -16,7 +16,7 @@ public class CatalogSearchService {
     }
     
     public CatalogQueryResult search(CatalogQuery catalogQuery) {
-        ParsedQuery parsedQuery = queryParser.parse(catalogQuery.getQuery());
+        CatalogParsedQuery parsedQuery = queryParser.parse(catalogQuery.getQuery());
         SearchStrategy strategy = strategySelector.selectStrategy(parsedQuery);
         
         Pagination pagination = new Pagination(catalogQuery.getPage(), catalogQuery.getSize());

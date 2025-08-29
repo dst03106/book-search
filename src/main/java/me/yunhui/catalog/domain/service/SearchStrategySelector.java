@@ -1,7 +1,7 @@
 package me.yunhui.catalog.domain.service;
 
 import me.yunhui.catalog.domain.exception.SearchStrategyNotFoundException;
-import me.yunhui.catalog.domain.vo.ParsedQuery;
+import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ public class SearchStrategySelector {
         this.strategies = strategies;
     }
     
-    public SearchStrategy selectStrategy(ParsedQuery parsedQuery) {
+    public SearchStrategy selectStrategy(CatalogParsedQuery catalogParsedQuery) {
         return strategies.stream()
-                .filter(strategy -> strategy.supports(parsedQuery.getType()))
+                .filter(strategy -> strategy.supports(catalogParsedQuery.getType()))
                 .findFirst()
-                .orElseThrow(() -> new SearchStrategyNotFoundException(parsedQuery.getType()));
+                .orElseThrow(() -> new SearchStrategyNotFoundException(catalogParsedQuery.getType()));
     }
 }

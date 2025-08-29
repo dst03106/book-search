@@ -3,7 +3,7 @@ package me.yunhui.catalog.domain;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.InvalidQueryFormatException;
 import me.yunhui.catalog.domain.service.QueryParser;
-import me.yunhui.catalog.domain.vo.ParsedQuery;
+import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,9 +28,9 @@ class QueryParserTest {
         @Test
         @DisplayName("단순 키워드를 파싱할 수 있다")
         void parseSimpleQuery() {
-            ParsedQuery parsedQuery = queryParser.parse("java");
+            CatalogParsedQuery parsedQuery = queryParser.parse("java");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.SIMPLE);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.SIMPLE);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("java");
             assertThat(parsedQuery.getSecondKeyword()).isNull();
         }
@@ -43,9 +43,9 @@ class QueryParserTest {
         @Test
         @DisplayName("OR 연산자를 포함한 쿼리를 파싱할 수 있다")
         void parseOrQuery() {
-            ParsedQuery parsedQuery = queryParser.parse("tdd|javascript");
+            CatalogParsedQuery parsedQuery = queryParser.parse("tdd|javascript");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.OR);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("tdd");
             assertThat(parsedQuery.getSecondKeyword()).isEqualTo("javascript");
             assertThat(parsedQuery.getOriginalQuery()).isEqualTo("tdd|javascript");
@@ -54,9 +54,9 @@ class QueryParserTest {
         @Test
         @DisplayName("공백이 포함된 OR 쿼리를 올바르게 파싱한다")
         void parseOrQueryWithSpaces() {
-            ParsedQuery parsedQuery = queryParser.parse("spring boot | react");
+            CatalogParsedQuery parsedQuery = queryParser.parse("spring boot | react");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.OR);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("spring boot");
             assertThat(parsedQuery.getSecondKeyword()).isEqualTo("react");
         }
@@ -77,9 +77,9 @@ class QueryParserTest {
         @Test
         @DisplayName("NOT 연산자를 포함한 쿼리를 파싱할 수 있다")
         void parseNotQuery() {
-            ParsedQuery parsedQuery = queryParser.parse("tdd-javascript");
+            CatalogParsedQuery parsedQuery = queryParser.parse("tdd-javascript");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.NOT);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.NOT);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("tdd");
             assertThat(parsedQuery.getSecondKeyword()).isEqualTo("javascript");
             assertThat(parsedQuery.getOriginalQuery()).isEqualTo("tdd-javascript");
@@ -88,9 +88,9 @@ class QueryParserTest {
         @Test
         @DisplayName("공백이 포함된 NOT 쿼리를 올바르게 파싱한다")
         void parseNotQueryWithSpaces() {
-            ParsedQuery parsedQuery = queryParser.parse("spring boot - legacy");
+            CatalogParsedQuery parsedQuery = queryParser.parse("spring boot - legacy");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.NOT);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.NOT);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("spring boot");
             assertThat(parsedQuery.getSecondKeyword()).isEqualTo("legacy");
         }
@@ -111,9 +111,9 @@ class QueryParserTest {
         @Test
         @DisplayName("OR 연산자가 NOT 연산자보다 우선된다")
         void orHasPriorityOverNot() {
-            ParsedQuery parsedQuery = queryParser.parse("java|spring-boot");
+            CatalogParsedQuery parsedQuery = queryParser.parse("java|spring-boot");
             
-            assertThat(parsedQuery.getType()).isEqualTo(ParsedQuery.QueryType.OR);
+            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
             assertThat(parsedQuery.getFirstKeyword()).isEqualTo("java");
             assertThat(parsedQuery.getSecondKeyword()).isEqualTo("spring-boot");
         }
