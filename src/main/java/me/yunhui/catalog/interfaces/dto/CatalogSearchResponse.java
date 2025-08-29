@@ -67,7 +67,7 @@ public record CatalogSearchResponse(
         @Schema(description = "부제목", example = "Best Practices Guide")
         String subtitle,
         @Schema(description = "이미지 URL", example = "https://example.com/book.png")
-        String image,
+        String imageUrl,
         @Schema(description = "저자", example = "Joshua Bloch")
         String author,
         @Schema(description = "ISBN", example = "9780134685991")
