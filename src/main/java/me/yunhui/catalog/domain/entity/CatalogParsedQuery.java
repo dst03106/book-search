@@ -1,56 +1,63 @@
-package me.yunhui.catalog.domain.vo;
+package me.yunhui.catalog.domain.entity;
 
+import me.yunhui.catalog.domain.event.CatalogKeywordSearchedEvent;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.TooManyKeywordsException;
-import me.yunhui.shared.domain.ValueObject;
+import me.yunhui.catalog.domain.vo.CatalogKeyword;
+import me.yunhui.shared.domain.AggregateRoot;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
-public class CatalogParsedQuery extends ValueObject {
+public class CatalogParsedQuery extends AggregateRoot<String> {
     
-    public enum QueryType {
-        SIMPLE,
-        OR,
-        NOT
-    }
-    
-    private final QueryType type;
-    private final List<String> keywords;
+    private final String id;
+    private final List<CatalogKeyword> keywords;
     private final String originalQuery;
     
-    private CatalogParsedQuery(QueryType type, List<String> keywords, String originalQuery) {
+    private CatalogParsedQuery(List<CatalogKeyword> keywords, String originalQuery) {
         if (keywords == null || keywords.isEmpty()) {
             throw new EmptyKeywordException("Keywords cannot be null or empty");
         }
         if (keywords.size() > 2) {
             throw new TooManyKeywordsException("Maximum 2 keywords are supported");
         }
-        this.type = type;
+        this.id = UUID.randomUUID().toString();
         this.keywords = List.copyOf(keywords);
         this.originalQuery = originalQuery;
+        
+        // 포함될 키워드들에 대한 이벤트 발행
+        List<CatalogKeyword> includedKeywords = keywords.stream()
+                .filter(CatalogKeyword::isIncludedInSearch)
+                .toList();
+        
+        if (!includedKeywords.isEmpty()) {
+            addEvent(CatalogKeywordSearchedEvent.of(includedKeywords));
+        }
+    }
+    
+    @Override
+    public String getId() {
+        return id;
     }
     
     public static CatalogParsedQuery simple(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             throw new EmptyKeywordException("Keyword cannot be null or empty");
         }
-        return new CatalogParsedQuery(QueryType.SIMPLE, List.of(keyword.trim()), keyword);
+        return new CatalogParsedQuery(List.of(CatalogKeyword.included(keyword)), keyword);
     }
     
     public static CatalogParsedQuery or(String keyword1, String keyword2, String originalQuery) {
-        return new CatalogParsedQuery(QueryType.OR, List.of(keyword1.trim(), keyword2.trim()), originalQuery);
+        return new CatalogParsedQuery(List.of(CatalogKeyword.included(keyword1), CatalogKeyword.included(keyword2)), originalQuery);
     }
     
     public static CatalogParsedQuery not(String includeKeyword, String excludeKeyword, String originalQuery) {
-        return new CatalogParsedQuery(QueryType.NOT, List.of(includeKeyword.trim(), excludeKeyword.trim()), originalQuery);
+        return new CatalogParsedQuery(List.of(CatalogKeyword.included(includeKeyword), CatalogKeyword.excluded(excludeKeyword)), originalQuery);
     }
     
     
-    public QueryType getType() {
-        return type;
-    }
-    
-    public List<String> getKeywords() {
+    public List<CatalogKeyword> getKeywords() {
         return keywords;
     }
     
@@ -58,24 +65,12 @@ public class CatalogParsedQuery extends ValueObject {
         return originalQuery;
     }
     
-    public String getFirstKeyword() {
+    public CatalogKeyword getFirstKeyword() {
         return keywords.get(0);
     }
     
-    public String getSecondKeyword() {
+    public CatalogKeyword getSecondKeyword() {
         return keywords.size() > 1 ? keywords.get(1) : null;
-    }
-    
-    public boolean isSimple() {
-        return type == QueryType.SIMPLE;
-    }
-    
-    public boolean isOr() {
-        return type == QueryType.OR;
-    }
-    
-    public boolean isNot() {
-        return type == QueryType.NOT;
     }
     
     @Override
@@ -83,21 +78,19 @@ public class CatalogParsedQuery extends ValueObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CatalogParsedQuery that = (CatalogParsedQuery) o;
-        return type == that.type &&
-               Objects.equals(keywords, that.keywords) &&
+        return Objects.equals(keywords, that.keywords) &&
                Objects.equals(originalQuery, that.originalQuery);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(type, keywords, originalQuery);
+        return Objects.hash(keywords, originalQuery);
     }
     
     @Override
     public String toString() {
         return "CatalogParsedQuery{" +
-                "type=" + type +
-                ", keywords=" + keywords +
+                "keywords=" + keywords +
                 ", originalQuery='" + originalQuery + '\'' +
                 '}';
     }

@@ -1,9 +1,12 @@
 package me.yunhui.catalog.domain.vo;
 
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.InvalidPageNumberException;
 import me.yunhui.catalog.domain.exception.InvalidPageSizeException;
+import me.yunhui.catalog.domain.service.QueryParser;
 import me.yunhui.shared.domain.ValueObject;
+import java.util.List;
 import java.util.Objects;
 
 public class CatalogQuery extends ValueObject {
@@ -41,6 +44,15 @@ public class CatalogQuery extends ValueObject {
 
     public int getSize() {
         return size;
+    }
+    
+    public List<CatalogKeyword> extractIncludedKeywords() {
+        QueryParser queryParser = new QueryParser();
+        CatalogParsedQuery parsedQuery = queryParser.parse(this.query);
+        
+        return parsedQuery.getKeywords().stream()
+                .filter(CatalogKeyword::isIncludedInSearch)
+                .toList();
     }
 
     @Override

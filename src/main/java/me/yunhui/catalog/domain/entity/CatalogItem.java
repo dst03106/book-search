@@ -1,11 +1,11 @@
 package me.yunhui.catalog.domain.entity;
 
-import me.yunhui.shared.domain.AggregateRoot;
+import me.yunhui.shared.domain.DomainEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class CatalogItem extends AggregateRoot<String> {
+public class CatalogItem implements DomainEntity<String> {
     private final String id;
     private final String title;
     private final String subtitle;

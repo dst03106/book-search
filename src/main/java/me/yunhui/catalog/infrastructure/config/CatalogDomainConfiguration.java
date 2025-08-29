@@ -1,6 +1,8 @@
 package me.yunhui.catalog.infrastructure.config;
 
+import me.yunhui.catalog.domain.handler.CatalogKeywordTrackingHandler;
 import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
+import me.yunhui.catalog.domain.repository.CatalogKeywordRepository;
 import me.yunhui.catalog.domain.service.CatalogSearchService;
 import me.yunhui.catalog.domain.service.QueryParser;
 import me.yunhui.catalog.domain.service.SearchStrategy;
@@ -42,7 +44,12 @@ public class CatalogDomainConfiguration {
     }
     
     @Bean
-    public CatalogSearchService catalogSearchService(QueryParser queryParser, SearchStrategySelector searchStrategySelector) {
-        return new CatalogSearchService(queryParser, searchStrategySelector);
+    public CatalogSearchService catalogSearchService(SearchStrategySelector searchStrategySelector) {
+        return new CatalogSearchService(searchStrategySelector);
+    }
+    
+    @Bean
+    public CatalogKeywordTrackingHandler catalogKeywordTrackingHandler(CatalogKeywordRepository catalogKeywordRepository) {
+        return new CatalogKeywordTrackingHandler(catalogKeywordRepository);
     }
 }

@@ -1,10 +1,13 @@
 package me.yunhui.catalog.interfaces.rest;
 
 import me.yunhui.catalog.application.CatalogService;
+import me.yunhui.catalog.application.PopularKeywordService;
+import me.yunhui.catalog.domain.vo.CatalogKeyword;
 import me.yunhui.catalog.domain.vo.CatalogQuery;
 import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchRequest;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchResponse;
+import me.yunhui.catalog.interfaces.dto.PopularKeywordResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +18,11 @@ import java.util.List;
 public class CatalogController {
     
     private final CatalogService catalogService;
+    private final PopularKeywordService popularKeywordService;
     
-    public CatalogController(CatalogService catalogService) {
+    public CatalogController(CatalogService catalogService, PopularKeywordService popularKeywordService) {
         this.catalogService = catalogService;
+        this.popularKeywordService = popularKeywordService;
     }
     
     @GetMapping
@@ -70,9 +75,14 @@ public class CatalogController {
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping("/popular")
-    public ResponseEntity<List<String>> getPopularSearchTerms() {
-        // TODO: 인기 검색어 TOP10 구현 (나중에)
-        return ResponseEntity.ok(List.of());
+    @GetMapping("/popular-keywords")  
+    public ResponseEntity<PopularKeywordResponse> getPopularKeywords() {
+        List<CatalogKeyword> popularKeywords = popularKeywordService.getTop10PopularKeywords();
+        List<String> keywordValues = popularKeywords.stream()
+                .map(CatalogKeyword::value)
+                .toList();
+        
+        PopularKeywordResponse response = PopularKeywordResponse.of(keywordValues);
+        return ResponseEntity.ok(response);
     }
 }

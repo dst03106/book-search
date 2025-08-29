@@ -1,7 +1,7 @@
 package me.yunhui.catalog.domain;
 
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
-import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,10 @@ class CatalogParsedQueryTest {
         void createSimpleQuery() {
             CatalogParsedQuery query = CatalogParsedQuery.simple("java");
             
-            assertThat(query.getType()).isEqualTo(CatalogParsedQuery.QueryType.SIMPLE);
-            assertThat(query.getFirstKeyword()).isEqualTo("java");
+            assertThat(query.getKeywords()).hasSize(1);
+            assertThat(query.getFirstKeyword().value()).isEqualTo("java");
+            assertThat(query.getFirstKeyword().isIncludedInSearch()).isTrue();
             assertThat(query.getSecondKeyword()).isNull();
-            assertThat(query.isSimple()).isTrue();
-            assertThat(query.isOr()).isFalse();
-            assertThat(query.isNot()).isFalse();
         }
         
         @Test
@@ -33,7 +31,7 @@ class CatalogParsedQueryTest {
         void trimWhitespace() {
             CatalogParsedQuery query = CatalogParsedQuery.simple("  spring boot  ");
             
-            assertThat(query.getFirstKeyword()).isEqualTo("spring boot");
+            assertThat(query.getFirstKeyword().value()).isEqualTo("spring boot");
         }
     }
     
@@ -46,13 +44,12 @@ class CatalogParsedQueryTest {
         void createOrQuery() {
             CatalogParsedQuery query = CatalogParsedQuery.or("java", "kotlin", "java|kotlin");
             
-            assertThat(query.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
-            assertThat(query.getFirstKeyword()).isEqualTo("java");
-            assertThat(query.getSecondKeyword()).isEqualTo("kotlin");
+            assertThat(query.getKeywords()).hasSize(2);
+            assertThat(query.getFirstKeyword().value()).isEqualTo("java");
+            assertThat(query.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(query.getSecondKeyword().value()).isEqualTo("kotlin");
+            assertThat(query.getSecondKeyword().isIncludedInSearch()).isTrue();
             assertThat(query.getOriginalQuery()).isEqualTo("java|kotlin");
-            assertThat(query.isOr()).isTrue();
-            assertThat(query.isSimple()).isFalse();
-            assertThat(query.isNot()).isFalse();
         }
     }
     
@@ -65,13 +62,12 @@ class CatalogParsedQueryTest {
         void createNotQuery() {
             CatalogParsedQuery query = CatalogParsedQuery.not("programming", "beginner", "programming-beginner");
             
-            assertThat(query.getType()).isEqualTo(CatalogParsedQuery.QueryType.NOT);
-            assertThat(query.getFirstKeyword()).isEqualTo("programming");
-            assertThat(query.getSecondKeyword()).isEqualTo("beginner");
+            assertThat(query.getKeywords()).hasSize(2);
+            assertThat(query.getFirstKeyword().value()).isEqualTo("programming");
+            assertThat(query.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(query.getSecondKeyword().value()).isEqualTo("beginner");
+            assertThat(query.getSecondKeyword().isIncludedInSearch()).isFalse();
             assertThat(query.getOriginalQuery()).isEqualTo("programming-beginner");
-            assertThat(query.isNot()).isTrue();
-            assertThat(query.isSimple()).isFalse();
-            assertThat(query.isOr()).isFalse();
         }
     }
     
