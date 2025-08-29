@@ -3,7 +3,7 @@ package me.yunhui.catalog.domain.service.strategy;
 import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import me.yunhui.catalog.domain.service.SearchStrategy;
 import me.yunhui.catalog.domain.vo.Pagination;
-import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 
 public class NotSearchStrategy implements SearchStrategy {

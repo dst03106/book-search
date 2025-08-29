@@ -1,6 +1,6 @@
 package me.yunhui.catalog.domain.exception;
 
-import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 
 public class SearchStrategyNotFoundException extends CatalogDomainException {
     
