@@ -17,14 +17,16 @@ public class OrSearchStrategy implements SearchStrategy {
     @Override
     public CatalogQueryResult search(CatalogParsedQuery parsedQuery, Pagination pagination) {
         return documentRepository.orSearch(
-            parsedQuery.getFirstKeyword(),
-            parsedQuery.getSecondKeyword(),
+            parsedQuery.getFirstKeyword().value(),
+            parsedQuery.getSecondKeyword().value(),
             pagination
         );
     }
     
     @Override
-    public boolean supports(CatalogParsedQuery.QueryType queryType) {
-        return queryType == CatalogParsedQuery.QueryType.OR;
+    public boolean supports(CatalogParsedQuery parsedQuery) {
+        // 키워드가 2개이고 모두 포함 키워드인 경우 (OR)
+        return parsedQuery.getKeywords().size() == 2 && 
+               parsedQuery.getKeywords().stream().allMatch(k -> k.isIncludedInSearch());
     }
 }

@@ -7,8 +7,7 @@ public record CatalogQueryResult(
     List<CatalogItem> items,
     long totalCount
 ) {
-    
-    
+
     public boolean isEmpty() {
         return items.isEmpty();
     }

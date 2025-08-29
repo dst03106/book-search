@@ -17,13 +17,15 @@ public class DefaultSearchStrategy implements SearchStrategy {
     @Override
     public CatalogQueryResult search(CatalogParsedQuery parsedQuery, Pagination pagination) {
         return documentRepository.smartSearch(
-            parsedQuery.getFirstKeyword(), 
+            parsedQuery.getFirstKeyword().value(), 
             pagination
         );
     }
     
     @Override
-    public boolean supports(CatalogParsedQuery.QueryType queryType) {
-        return queryType == CatalogParsedQuery.QueryType.SIMPLE;
+    public boolean supports(CatalogParsedQuery parsedQuery) {
+        // 키워드가 1개이고 모두 포함 키워드인 경우 (SIMPLE)
+        return parsedQuery.getKeywords().size() == 1 && 
+               parsedQuery.getKeywords().get(0).isIncludedInSearch();
     }
 }

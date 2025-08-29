@@ -6,7 +6,7 @@ public class SearchStrategyNotFoundException extends CatalogDomainException {
     
     private static final String ERROR_CODE = "CATALOG_004";
     
-    public SearchStrategyNotFoundException(CatalogParsedQuery.QueryType queryType) {
-        super("No search strategy found for query type: " + queryType, ERROR_CODE);
+    public SearchStrategyNotFoundException(CatalogParsedQuery parsedQuery) {
+        super("No search strategy found for query: " + parsedQuery, ERROR_CODE);
     }
 }

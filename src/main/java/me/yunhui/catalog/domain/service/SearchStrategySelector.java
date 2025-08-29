@@ -15,8 +15,8 @@ public class SearchStrategySelector {
     
     public SearchStrategy selectStrategy(CatalogParsedQuery catalogParsedQuery) {
         return strategies.stream()
-                .filter(strategy -> strategy.supports(catalogParsedQuery.getType()))
+                .filter(strategy -> strategy.supports(catalogParsedQuery))
                 .findFirst()
-                .orElseThrow(() -> new SearchStrategyNotFoundException(catalogParsedQuery.getType()));
+                .orElseThrow(() -> new SearchStrategyNotFoundException(catalogParsedQuery));
     }
 }

@@ -30,8 +30,9 @@ class QueryParserTest {
         void parseSimpleQuery() {
             CatalogParsedQuery parsedQuery = queryParser.parse("java");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.SIMPLE);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("java");
+            assertThat(parsedQuery.getKeywords()).hasSize(1);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("java");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
             assertThat(parsedQuery.getSecondKeyword()).isNull();
         }
     }
@@ -45,9 +46,11 @@ class QueryParserTest {
         void parseOrQuery() {
             CatalogParsedQuery parsedQuery = queryParser.parse("tdd|javascript");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("tdd");
-            assertThat(parsedQuery.getSecondKeyword()).isEqualTo("javascript");
+            assertThat(parsedQuery.getKeywords()).hasSize(2);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("tdd");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(parsedQuery.getSecondKeyword().value()).isEqualTo("javascript");
+            assertThat(parsedQuery.getSecondKeyword().isIncludedInSearch()).isTrue();
             assertThat(parsedQuery.getOriginalQuery()).isEqualTo("tdd|javascript");
         }
         
@@ -56,9 +59,11 @@ class QueryParserTest {
         void parseOrQueryWithSpaces() {
             CatalogParsedQuery parsedQuery = queryParser.parse("spring boot | react");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("spring boot");
-            assertThat(parsedQuery.getSecondKeyword()).isEqualTo("react");
+            assertThat(parsedQuery.getKeywords()).hasSize(2);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("spring boot");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(parsedQuery.getSecondKeyword().value()).isEqualTo("react");
+            assertThat(parsedQuery.getSecondKeyword().isIncludedInSearch()).isTrue();
         }
         
         @Test
@@ -79,9 +84,11 @@ class QueryParserTest {
         void parseNotQuery() {
             CatalogParsedQuery parsedQuery = queryParser.parse("tdd-javascript");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.NOT);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("tdd");
-            assertThat(parsedQuery.getSecondKeyword()).isEqualTo("javascript");
+            assertThat(parsedQuery.getKeywords()).hasSize(2);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("tdd");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(parsedQuery.getSecondKeyword().value()).isEqualTo("javascript");
+            assertThat(parsedQuery.getSecondKeyword().isIncludedInSearch()).isFalse();
             assertThat(parsedQuery.getOriginalQuery()).isEqualTo("tdd-javascript");
         }
         
@@ -90,9 +97,11 @@ class QueryParserTest {
         void parseNotQueryWithSpaces() {
             CatalogParsedQuery parsedQuery = queryParser.parse("spring boot - legacy");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.NOT);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("spring boot");
-            assertThat(parsedQuery.getSecondKeyword()).isEqualTo("legacy");
+            assertThat(parsedQuery.getKeywords()).hasSize(2);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("spring boot");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(parsedQuery.getSecondKeyword().value()).isEqualTo("legacy");
+            assertThat(parsedQuery.getSecondKeyword().isIncludedInSearch()).isFalse();
         }
         
         @Test
@@ -113,9 +122,11 @@ class QueryParserTest {
         void orHasPriorityOverNot() {
             CatalogParsedQuery parsedQuery = queryParser.parse("java|spring-boot");
             
-            assertThat(parsedQuery.getType()).isEqualTo(CatalogParsedQuery.QueryType.OR);
-            assertThat(parsedQuery.getFirstKeyword()).isEqualTo("java");
-            assertThat(parsedQuery.getSecondKeyword()).isEqualTo("spring-boot");
+            assertThat(parsedQuery.getKeywords()).hasSize(2);
+            assertThat(parsedQuery.getFirstKeyword().value()).isEqualTo("java");
+            assertThat(parsedQuery.getFirstKeyword().isIncludedInSearch()).isTrue();
+            assertThat(parsedQuery.getSecondKeyword().value()).isEqualTo("spring-boot");
+            assertThat(parsedQuery.getSecondKeyword().isIncludedInSearch()).isTrue();
         }
     }
     

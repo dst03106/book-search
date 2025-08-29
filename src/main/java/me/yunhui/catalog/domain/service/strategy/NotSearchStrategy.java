@@ -17,14 +17,16 @@ public class NotSearchStrategy implements SearchStrategy {
     @Override
     public CatalogQueryResult search(CatalogParsedQuery parsedQuery, Pagination pagination) {
         return documentRepository.notSearch(
-            parsedQuery.getFirstKeyword(),
-            parsedQuery.getSecondKeyword(),
+            parsedQuery.getFirstKeyword().value(),
+            parsedQuery.getSecondKeyword().value(),
             pagination
         );
     }
     
     @Override
-    public boolean supports(CatalogParsedQuery.QueryType queryType) {
-        return queryType == CatalogParsedQuery.QueryType.NOT;
+    public boolean supports(CatalogParsedQuery parsedQuery) {
+        // 키워드가 2개이고 하나는 포함, 하나는 제외 키워드인 경우 (NOT)
+        return parsedQuery.getKeywords().size() == 2 && 
+               parsedQuery.getKeywords().stream().anyMatch(k -> !k.isIncludedInSearch());
     }
 }
