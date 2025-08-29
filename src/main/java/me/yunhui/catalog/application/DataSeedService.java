@@ -14,6 +14,12 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class DataSeedService {
@@ -21,6 +27,10 @@ public class DataSeedService {
     private final DataImportService dataImportService;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final Executor executor;
+    
+    private static final int MAX_CONCURRENT_REQUESTS = 5;
+    private static final int RATE_LIMIT_DELAY_MS = 200;
     
     private static final String IT_BOOKSTORE_API = "https://api.itbook.store/1.0";
     private static final List<String> SEARCH_KEYWORDS = List.of(
@@ -35,26 +45,42 @@ public class DataSeedService {
         this.dataImportService = dataImportService;
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
+        this.executor = Executors.newFixedThreadPool(MAX_CONCURRENT_REQUESTS);
     }
     
     public void seedBooksFromItBookstore() {
+        Set<String> isbnSet = ConcurrentHashMap.newKeySet();
         List<CatalogItem> allBooks = new ArrayList<>();
-        Set<String> isbnSet = new HashSet<>();
         
-        for (String keyword : SEARCH_KEYWORDS) {
-            try {
-                List<CatalogItem> books = fetchBooksFromApi(keyword, isbnSet);
-                allBooks.addAll(books);
-                
-                if (allBooks.size() >= 100) {
-                    break;
+        // 비동기로 모든 키워드에 대해 API 호출
+        List<CompletableFuture<List<CatalogItem>>> futures = SEARCH_KEYWORDS.stream()
+            .map(keyword -> fetchBooksFromApiAsync(keyword, isbnSet))
+            .collect(Collectors.toList());
+        
+        // 모든 비동기 작업 완료 대기
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+            futures.toArray(new CompletableFuture[0])
+        );
+        
+        try {
+            // 최대 60초 대기
+            allFutures.get(60, TimeUnit.SECONDS);
+            
+            // 결과 수집
+            for (CompletableFuture<List<CatalogItem>> future : futures) {
+                if (future.isDone() && !future.isCompletedExceptionally()) {
+                    List<CatalogItem> books = future.get();
+                    synchronized (allBooks) {
+                        allBooks.addAll(books);
+                        if (allBooks.size() >= 100) {
+                            break;
+                        }
+                    }
                 }
-                
-                Thread.sleep(100);
-                
-            } catch (Exception e) {
-                System.out.println("Failed to fetch books for keyword: " + keyword + ", error: " + e.getMessage());
             }
+            
+        } catch (Exception e) {
+            System.out.println("Error while waiting for API calls to complete: " + e.getMessage());
         }
         
         if (!allBooks.isEmpty()) {
@@ -63,6 +89,23 @@ public class DataSeedService {
         } else {
             System.out.println("No books were imported");
         }
+    }
+    
+    private CompletableFuture<List<CatalogItem>> fetchBooksFromApiAsync(String keyword, Set<String> isbnSet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Rate limiting을 위한 지연
+                Thread.sleep(RATE_LIMIT_DELAY_MS);
+                return fetchBooksFromApi(keyword, isbnSet);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("Interrupted while processing keyword: " + keyword);
+                return new ArrayList<>();
+            } catch (Exception e) {
+                System.out.println("Failed to fetch books for keyword: " + keyword + ", error: " + e.getMessage());
+                return new ArrayList<>();
+            }
+        }, executor);
     }
     
     private List<CatalogItem> fetchBooksFromApi(String keyword, Set<String> isbnSet) {
