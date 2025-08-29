@@ -75,8 +75,8 @@ public class CatalogController {
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping("/searches/popular-terms")
-    public ResponseEntity<PopularKeywordResponse> getPopularSearchTerms() {
+    @GetMapping("/popular-keywords")  
+    public ResponseEntity<PopularKeywordResponse> getPopularKeywords() {
         List<CatalogKeyword> popularKeywords = popularKeywordService.getTop10PopularKeywords();
         List<String> keywordValues = popularKeywords.stream()
                 .map(CatalogKeyword::value)

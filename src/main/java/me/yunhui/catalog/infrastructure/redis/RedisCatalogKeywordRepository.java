@@ -14,10 +14,10 @@ public class RedisCatalogKeywordRepository implements CatalogKeywordRepository {
     
     private static final String POPULAR_KEYWORDS_KEY = "popular_keywords";
     
-    private final RedisTemplate<String, String> redisTemplate;
-    private final ZSetOperations<String, String> zSetOps;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ZSetOperations<String, Object> zSetOps;
     
-    public RedisCatalogKeywordRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisCatalogKeywordRepository(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.zSetOps = redisTemplate.opsForZSet();
     }
@@ -29,7 +29,7 @@ public class RedisCatalogKeywordRepository implements CatalogKeywordRepository {
     
     @Override
     public List<CatalogKeyword> findTopPopularKeywords(int limit) {
-        Set<ZSetOperations.TypedTuple<String>> topKeywords = zSetOps.reverseRangeWithScores(
+        Set<ZSetOperations.TypedTuple<Object>> topKeywords = zSetOps.reverseRangeWithScores(
             POPULAR_KEYWORDS_KEY, 0, limit - 1
         );
         
@@ -38,7 +38,7 @@ public class RedisCatalogKeywordRepository implements CatalogKeywordRepository {
         }
         
         return topKeywords.stream()
-                .map(tuple -> CatalogKeyword.included(tuple.getValue()))
+                .map(tuple -> CatalogKeyword.included((String) tuple.getValue()))
                 .toList();
     }
 }

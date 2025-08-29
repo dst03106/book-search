@@ -71,8 +71,6 @@ class PopularKeywordIntegrationTest {
     void setUp() {
         baseUrl = "http://localhost:" + port + "/api/catalog/popular-keywords";
         searchUrl = "http://localhost:" + port + "/api/catalog";
-        // Redis 클리어
-        redisTemplate.getConnectionFactory().getConnection().flushAll();
     }
 
     @Test
@@ -174,6 +172,13 @@ class PopularKeywordIntegrationTest {
         // Python 검색 (1번)
         restTemplate.getForEntity(searchUrl + "?q=python&page=0&size=10", CatalogSearchResponse.class);
         
+        // 비동기 처리 대기 시간
+        try {
+            Thread.sleep(1000); // 1초 대기
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
         // When: 상위 5개 인기 검색어 조회
         List<CatalogKeyword> result = popularKeywordService.getTopPopularKeywords(5);
         
@@ -232,6 +237,13 @@ class PopularKeywordIntegrationTest {
             restTemplate.getForEntity(searchUrl + "?q=python&page=0&size=10", CatalogSearchResponse.class);
         }
         
+        // 비동기 처리 대기 시간
+        try {
+            Thread.sleep(1000); // 1초 대기
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
         // When: 인기 검색어 조회
         List<CatalogKeyword> result = popularKeywordService.getTop10PopularKeywords();
         
@@ -271,6 +283,13 @@ class PopularKeywordIntegrationTest {
         restTemplate.getForEntity(searchUrl + "?q=algorithm&page=0&size=10", CatalogSearchResponse.class);
         restTemplate.getForEntity(searchUrl + "?q=algorithm&page=0&size=10", CatalogSearchResponse.class);
         restTemplate.getForEntity(searchUrl + "?q=data structure&page=0&size=10", CatalogSearchResponse.class);
+        
+        // 비동기 처리 대기 시간
+        try {
+            Thread.sleep(1000); // 1초 대기
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         
         // When: REST API 호출
         ResponseEntity<PopularKeywordResponse> response = restTemplate.getForEntity(

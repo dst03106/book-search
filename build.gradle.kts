@@ -22,6 +22,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:elasticsearch:1.19.0")
     testImplementation("org.testcontainers:junit-jupiter")
+    testRuntimeOnly("org.testcontainers:testcontainers")
 }
 
 tasks.test {
