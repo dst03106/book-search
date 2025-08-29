@@ -1,13 +1,17 @@
-package me.yunhui.catalog.domain.vo;
+package me.yunhui.catalog.domain.entity;
 
+import me.yunhui.catalog.domain.event.CatalogKeywordSearchedEvent;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.TooManyKeywordsException;
-import me.yunhui.shared.domain.ValueObject;
+import me.yunhui.catalog.domain.vo.CatalogKeyword;
+import me.yunhui.shared.domain.AggregateRoot;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
-public class CatalogParsedQuery extends ValueObject {
+public class CatalogParsedQuery extends AggregateRoot<String> {
     
+    private final String id;
     private final List<CatalogKeyword> keywords;
     private final String originalQuery;
     
@@ -18,8 +22,23 @@ public class CatalogParsedQuery extends ValueObject {
         if (keywords.size() > 2) {
             throw new TooManyKeywordsException("Maximum 2 keywords are supported");
         }
+        this.id = UUID.randomUUID().toString();
         this.keywords = List.copyOf(keywords);
         this.originalQuery = originalQuery;
+        
+        // 포함될 키워드들에 대한 이벤트 발행
+        List<CatalogKeyword> includedKeywords = keywords.stream()
+                .filter(CatalogKeyword::isIncludedInSearch)
+                .toList();
+        
+        if (!includedKeywords.isEmpty()) {
+            addEvent(CatalogKeywordSearchedEvent.of(includedKeywords));
+        }
+    }
+    
+    @Override
+    public String getId() {
+        return id;
     }
     
     public static CatalogParsedQuery simple(String keyword) {

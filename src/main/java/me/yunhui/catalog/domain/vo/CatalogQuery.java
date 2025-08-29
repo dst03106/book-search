@@ -1,5 +1,6 @@
 package me.yunhui.catalog.domain.vo;
 
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.InvalidPageNumberException;
 import me.yunhui.catalog.domain.exception.InvalidPageSizeException;
