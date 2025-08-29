@@ -3,7 +3,7 @@ package me.yunhui.catalog.domain;
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.InvalidQueryFormatException;
 import me.yunhui.catalog.domain.service.QueryParser;
-import me.yunhui.catalog.domain.vo.CatalogParsedQuery;
+import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
