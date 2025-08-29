@@ -1,5 +1,8 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.vo;
 
+import me.yunhui.catalog.domain.exception.EmptyKeywordException;
+import me.yunhui.catalog.domain.exception.InvalidPageNumberException;
+import me.yunhui.catalog.domain.exception.InvalidPageSizeException;
 import me.yunhui.shared.domain.ValueObject;
 import java.util.Objects;
 
@@ -11,13 +14,13 @@ public class CatalogQuery extends ValueObject {
 
     private CatalogQuery(String query, int page, int size) {
         if (query == null || query.isBlank()) {
-            throw new IllegalArgumentException("Query cannot be null or blank");
+            throw new EmptyKeywordException("검색어는 필수입니다");
         }
         if (page < 0) {
-            throw new IllegalArgumentException("Page cannot be negative");
+            throw new InvalidPageNumberException("페이지 번호는 0 이상이어야 합니다");
         }
         if (size <= 0) {
-            throw new IllegalArgumentException("Size must be positive");
+            throw new InvalidPageSizeException("페이지 크기는 1 이상이어야 합니다");
         }
         this.query = query.trim();
         this.page = page;
@@ -64,3 +67,4 @@ public class CatalogQuery extends ValueObject {
                 '}';
     }
 }
+

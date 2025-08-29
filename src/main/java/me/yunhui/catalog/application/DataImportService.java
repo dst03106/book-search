@@ -1,21 +1,21 @@
 package me.yunhui.catalog.application;
 
-import me.yunhui.catalog.domain.CatalogItem;
-import me.yunhui.catalog.domain.CatalogRepository;
+import me.yunhui.catalog.domain.entity.CatalogItem;
+import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class DataImportService {
     
-    private final CatalogRepository catalogRepository;
+    private final CatalogDocumentRepository catalogDocumentRepository;
     
-    public DataImportService(CatalogRepository catalogRepository) {
-        this.catalogRepository = catalogRepository;
+    public DataImportService(CatalogDocumentRepository catalogDocumentRepository) {
+        this.catalogDocumentRepository = catalogDocumentRepository;
     }
     
     public void importCatalogItems(List<CatalogItem> items) {
-        catalogRepository.saveAll(items);
+        catalogDocumentRepository.saveAll(items);
     }
     
     public void clearAll() {
@@ -24,3 +24,4 @@ public class DataImportService {
         // catalogRepository.deleteAll();
     }
 }
+

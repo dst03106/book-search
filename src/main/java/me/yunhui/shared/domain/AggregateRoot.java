@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AggregateRoot {
+public abstract class AggregateRoot<ID> implements DomainEntity<ID> {
     private final List<DomainEvent> uncommittedEvents = new ArrayList<>();
     
     protected void addEvent(DomainEvent event) {

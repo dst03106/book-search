@@ -1,20 +1,21 @@
 package me.yunhui.catalog.application;
 
-import me.yunhui.catalog.domain.CatalogQuery;
-import me.yunhui.catalog.domain.CatalogRepository;
-import me.yunhui.catalog.domain.CatalogResult;
+import me.yunhui.catalog.domain.service.CatalogSearchService;
+import me.yunhui.catalog.domain.vo.CatalogQuery;
+import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CatalogService {
     
-    private final CatalogRepository catalogRepository;
+    private final CatalogSearchService catalogSearchService;
     
-    public CatalogService(CatalogRepository catalogRepository) {
-        this.catalogRepository = catalogRepository;
+    public CatalogService(CatalogSearchService catalogSearchService) {
+        this.catalogSearchService = catalogSearchService;
     }
     
-    public CatalogResult search(CatalogQuery query) {
-        return catalogRepository.search(query);
+    public CatalogQueryResult search(CatalogQuery query) {
+        return catalogSearchService.search(query);
     }
 }
+
