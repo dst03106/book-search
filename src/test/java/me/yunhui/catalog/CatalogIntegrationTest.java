@@ -12,14 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.time.Duration;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +37,7 @@ class CatalogIntegrationTest {
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("elasticsearch.host", elasticsearch::getHost);
         registry.add("elasticsearch.port", elasticsearch::getFirstMappedPort);
+        // Redis는 사용하지 않음 (키워드 추적 이벤트 핸들러에서 예외 처리됨)
     }
 
 //    @Container
