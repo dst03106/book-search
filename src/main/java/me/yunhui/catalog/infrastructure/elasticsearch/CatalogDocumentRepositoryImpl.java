@@ -3,7 +3,7 @@ package me.yunhui.catalog.infrastructure.elasticsearch;
 import me.yunhui.catalog.domain.entity.CatalogItem;
 import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import me.yunhui.catalog.domain.vo.Pagination;
-import me.yunhui.catalog.domain.vo.SearchResult;
+import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class CatalogDocumentRepositoryImpl implements CatalogDocumentRepository 
     }
     
     @Override
-    public SearchResult smartSearch(String query, Pagination pagination) {
+    public CatalogQueryResult smartSearch(String query, Pagination pagination) {
         Page<CatalogDocument> page = elasticsearchRepository.smartSearch(
             query, 
             PageRequest.of(pagination.page(), pagination.size())
@@ -34,11 +34,11 @@ public class CatalogDocumentRepositoryImpl implements CatalogDocumentRepository 
                 .map(mapper::toDomain)
                 .toList();
         
-        return new SearchResult(items, page.getTotalElements());
+        return new CatalogQueryResult(items, page.getTotalElements());
     }
     
     @Override
-    public SearchResult orSearch(String keyword1, String keyword2, Pagination pagination) {
+    public CatalogQueryResult orSearch(String keyword1, String keyword2, Pagination pagination) {
         Page<CatalogDocument> page = elasticsearchRepository.orSearch(
             keyword1, 
             keyword2,
@@ -50,11 +50,11 @@ public class CatalogDocumentRepositoryImpl implements CatalogDocumentRepository 
                 .map(mapper::toDomain)
                 .toList();
         
-        return new SearchResult(items, page.getTotalElements());
+        return new CatalogQueryResult(items, page.getTotalElements());
     }
     
     @Override
-    public SearchResult notSearch(String includeKeyword, String excludeKeyword, Pagination pagination) {
+    public CatalogQueryResult notSearch(String includeKeyword, String excludeKeyword, Pagination pagination) {
         Page<CatalogDocument> page = elasticsearchRepository.notSearch(
             includeKeyword, 
             excludeKeyword,
@@ -66,7 +66,7 @@ public class CatalogDocumentRepositoryImpl implements CatalogDocumentRepository 
                 .map(mapper::toDomain)
                 .toList();
         
-        return new SearchResult(items, page.getTotalElements());
+        return new CatalogQueryResult(items, page.getTotalElements());
     }
     
     @Override

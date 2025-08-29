@@ -3,12 +3,12 @@ package me.yunhui.catalog.domain.vo;
 import me.yunhui.catalog.domain.entity.CatalogItem;
 import java.util.List;
 
-public record SearchResult(
+public record CatalogQueryResult(
     List<CatalogItem> items,
     long totalCount
 ) {
     
-    public SearchResult {
+    public CatalogQueryResult {
         if (items == null) {
             throw new IllegalArgumentException("Items cannot be null");
         }

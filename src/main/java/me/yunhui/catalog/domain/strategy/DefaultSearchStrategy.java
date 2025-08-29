@@ -4,7 +4,7 @@ import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import me.yunhui.catalog.domain.service.SearchStrategy;
 import me.yunhui.catalog.domain.vo.Pagination;
 import me.yunhui.catalog.domain.vo.ParsedQuery;
-import me.yunhui.catalog.domain.vo.SearchResult;
+import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 
 public class DefaultSearchStrategy implements SearchStrategy {
     
@@ -15,7 +15,7 @@ public class DefaultSearchStrategy implements SearchStrategy {
     }
     
     @Override
-    public SearchResult search(ParsedQuery parsedQuery, Pagination pagination) {
+    public CatalogQueryResult search(ParsedQuery parsedQuery, Pagination pagination) {
         return documentRepository.smartSearch(
             parsedQuery.getFirstKeyword(), 
             pagination

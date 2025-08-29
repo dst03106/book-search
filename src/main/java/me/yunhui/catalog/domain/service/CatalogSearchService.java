@@ -1,10 +1,9 @@
 package me.yunhui.catalog.domain.service;
 
 import me.yunhui.catalog.domain.vo.CatalogQuery;
-import me.yunhui.catalog.domain.vo.CatalogSearchResult;
 import me.yunhui.catalog.domain.vo.Pagination;
 import me.yunhui.catalog.domain.vo.ParsedQuery;
-import me.yunhui.catalog.domain.vo.SearchResult;
+import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 
 public class CatalogSearchService {
     
@@ -16,13 +15,11 @@ public class CatalogSearchService {
         this.strategySelector = strategySelector;
     }
     
-    public CatalogSearchResult search(CatalogQuery catalogQuery) {
+    public CatalogQueryResult search(CatalogQuery catalogQuery) {
         ParsedQuery parsedQuery = queryParser.parse(catalogQuery.getQuery());
         SearchStrategy strategy = strategySelector.selectStrategy(parsedQuery);
         
         Pagination pagination = new Pagination(catalogQuery.getPage(), catalogQuery.getSize());
-        SearchResult searchResult = strategy.search(parsedQuery, pagination);
-        
-        return CatalogSearchResult.from(searchResult, catalogQuery.getPage(), catalogQuery.getSize());
+        return strategy.search(parsedQuery, pagination);
     }
 }

@@ -2,7 +2,7 @@ package me.yunhui.catalog.interfaces.rest;
 
 import me.yunhui.catalog.application.CatalogService;
 import me.yunhui.catalog.domain.vo.CatalogQuery;
-import me.yunhui.catalog.domain.vo.CatalogResult;
+import me.yunhui.catalog.domain.vo.CatalogQueryResult;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchRequest;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchResponse;
 import org.springframework.http.ResponseEntity;
@@ -39,30 +39,30 @@ public class CatalogController {
         );
         
         // Service 호출
-        CatalogResult result = catalogService.search(query);
+        CatalogQueryResult result = catalogService.search(query);
         
         long executionTime = System.currentTimeMillis() - startTime;
         
         // Response DTO로 변환
-        List<CatalogSearchResponse.CatalogItemDto> items = result.getItems()
+        List<CatalogSearchResponse.CatalogItemDto> items = result.items()
                 .stream()
-                .map(resultItem -> new CatalogSearchResponse.CatalogItemDto(
-                    resultItem.id(),
-                    resultItem.title(),
-                    resultItem.subtitle(),
-                    resultItem.imageUrl(),  // image 파라미터에 imageUrl 값 전달
-                    resultItem.author(),
-                    resultItem.isbn(),
-                    resultItem.published()
+                .map(catalogItem -> new CatalogSearchResponse.CatalogItemDto(
+                    catalogItem.id(),
+                    catalogItem.title(),
+                    catalogItem.subtitle(),
+                    catalogItem.imageUrl(),
+                    catalogItem.author(),
+                    catalogItem.isbn(),
+                    catalogItem.published()
                 ))
                 .toList();
         
         CatalogSearchResponse response = CatalogSearchResponse.of(
             request.q(),
             items, 
-            result.getTotalElements(), 
-            result.getPage(), 
-            result.getSize(),
+            result.totalCount(), 
+            query.getPage(), 
+            query.getSize(),
             executionTime,
             "MULTI_MATCH" // 현재는 MULTI MATCH만 지원
         );
