@@ -5,9 +5,9 @@ import me.yunhui.catalog.domain.service.CatalogSearchService;
 import me.yunhui.catalog.domain.service.QueryParser;
 import me.yunhui.catalog.domain.service.SearchStrategy;
 import me.yunhui.catalog.domain.service.SearchStrategySelector;
-import me.yunhui.catalog.domain.strategy.DefaultSearchStrategy;
-import me.yunhui.catalog.domain.strategy.NotSearchStrategy;
-import me.yunhui.catalog.domain.strategy.OrSearchStrategy;
+import me.yunhui.catalog.domain.service.strategy.DefaultSearchStrategy;
+import me.yunhui.catalog.domain.service.strategy.NotSearchStrategy;
+import me.yunhui.catalog.domain.service.strategy.OrSearchStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
