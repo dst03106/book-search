@@ -1,6 +1,6 @@
 package me.yunhui.catalog.infrastructure.elasticsearch;
 
-import me.yunhui.catalog.domain.model.CatalogItem;
+import me.yunhui.catalog.domain.entity.CatalogItem;
 import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import me.yunhui.catalog.domain.vo.Pagination;
 import me.yunhui.catalog.domain.vo.SearchResult;

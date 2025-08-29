@@ -1,6 +1,6 @@
 package me.yunhui.catalog.infrastructure.elasticsearch;
 
-import me.yunhui.catalog.domain.model.CatalogItem;
+import me.yunhui.catalog.domain.entity.CatalogItem;
 import me.yunhui.catalog.domain.vo.CatalogResult;
 import org.springframework.stereotype.Component;
 

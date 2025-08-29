@@ -1,5 +1,6 @@
 package me.yunhui.catalog.domain;
 
+import me.yunhui.catalog.domain.vo.CatalogQuery;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

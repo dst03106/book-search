@@ -1,7 +1,7 @@
 package me.yunhui.catalog;
 
 import me.yunhui.catalog.application.DataImportService;
-import me.yunhui.catalog.domain.CatalogItem;
+import me.yunhui.catalog.domain.entity.CatalogItem;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
