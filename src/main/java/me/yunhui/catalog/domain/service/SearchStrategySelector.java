@@ -1,6 +1,7 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.service;
 
 import me.yunhui.catalog.domain.exception.SearchStrategyNotFoundException;
+import me.yunhui.catalog.domain.vo.ParsedQuery;
 
 import java.util.List;
 

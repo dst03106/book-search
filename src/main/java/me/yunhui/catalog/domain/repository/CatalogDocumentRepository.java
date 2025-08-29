@@ -1,5 +1,8 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.repository;
 
+import me.yunhui.catalog.domain.model.CatalogItem;
+import me.yunhui.catalog.domain.vo.Pagination;
+import me.yunhui.catalog.domain.vo.SearchResult;
 import java.util.List;
 
 public interface CatalogDocumentRepository {

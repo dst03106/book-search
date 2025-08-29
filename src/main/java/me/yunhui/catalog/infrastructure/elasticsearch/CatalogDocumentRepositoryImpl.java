@@ -1,6 +1,9 @@
 package me.yunhui.catalog.infrastructure.elasticsearch;
 
-import me.yunhui.catalog.domain.*;
+import me.yunhui.catalog.domain.model.CatalogItem;
+import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
+import me.yunhui.catalog.domain.vo.Pagination;
+import me.yunhui.catalog.domain.vo.SearchResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;

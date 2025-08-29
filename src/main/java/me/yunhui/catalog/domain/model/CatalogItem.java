@@ -1,4 +1,4 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

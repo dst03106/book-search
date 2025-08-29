@@ -1,6 +1,9 @@
 package me.yunhui.catalog.application;
 
-import me.yunhui.catalog.domain.*;
+import me.yunhui.catalog.domain.service.CatalogSearchService;
+import me.yunhui.catalog.domain.vo.CatalogQuery;
+import me.yunhui.catalog.domain.vo.CatalogResult;
+import me.yunhui.catalog.domain.vo.CatalogSearchResult;
 import org.springframework.stereotype.Service;
 
 @Service

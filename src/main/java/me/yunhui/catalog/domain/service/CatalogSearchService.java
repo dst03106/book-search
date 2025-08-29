@@ -1,4 +1,10 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.service;
+
+import me.yunhui.catalog.domain.vo.CatalogQuery;
+import me.yunhui.catalog.domain.vo.CatalogSearchResult;
+import me.yunhui.catalog.domain.vo.Pagination;
+import me.yunhui.catalog.domain.vo.ParsedQuery;
+import me.yunhui.catalog.domain.vo.SearchResult;
 
 public class CatalogSearchService {
     

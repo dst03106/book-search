@@ -1,4 +1,4 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.vo;
 
 public record Pagination(
     int page,

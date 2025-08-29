@@ -1,6 +1,10 @@
 package me.yunhui.catalog.infrastructure.config;
 
-import me.yunhui.catalog.domain.*;
+import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
+import me.yunhui.catalog.domain.service.CatalogSearchService;
+import me.yunhui.catalog.domain.service.QueryParser;
+import me.yunhui.catalog.domain.service.SearchStrategy;
+import me.yunhui.catalog.domain.service.SearchStrategySelector;
 import me.yunhui.catalog.domain.strategy.DefaultSearchStrategy;
 import me.yunhui.catalog.domain.strategy.NotSearchStrategy;
 import me.yunhui.catalog.domain.strategy.OrSearchStrategy;

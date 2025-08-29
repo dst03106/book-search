@@ -1,8 +1,8 @@
 package me.yunhui.catalog.interfaces.rest;
 
 import me.yunhui.catalog.application.CatalogService;
-import me.yunhui.catalog.domain.CatalogQuery;
-import me.yunhui.catalog.domain.CatalogResult;
+import me.yunhui.catalog.domain.vo.CatalogQuery;
+import me.yunhui.catalog.domain.vo.CatalogResult;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchRequest;
 import me.yunhui.catalog.interfaces.dto.CatalogSearchResponse;
 import org.springframework.http.ResponseEntity;

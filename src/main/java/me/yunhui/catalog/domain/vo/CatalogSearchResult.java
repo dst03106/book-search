@@ -1,4 +1,4 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.vo;
 
 import java.util.List;
 

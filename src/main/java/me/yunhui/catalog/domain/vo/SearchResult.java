@@ -1,5 +1,6 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.vo;
 
+import me.yunhui.catalog.domain.model.CatalogItem;
 import java.util.List;
 
 public record SearchResult(

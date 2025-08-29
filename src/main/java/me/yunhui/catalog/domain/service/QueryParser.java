@@ -1,7 +1,8 @@
-package me.yunhui.catalog.domain;
+package me.yunhui.catalog.domain.service;
 
 import me.yunhui.catalog.domain.exception.EmptyKeywordException;
 import me.yunhui.catalog.domain.exception.InvalidQueryFormatException;
+import me.yunhui.catalog.domain.vo.ParsedQuery;
 
 public class QueryParser {
     

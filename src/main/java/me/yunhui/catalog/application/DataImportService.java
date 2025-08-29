@@ -1,7 +1,7 @@
 package me.yunhui.catalog.application;
 
-import me.yunhui.catalog.domain.CatalogDocumentRepository;
-import me.yunhui.catalog.domain.CatalogItem;
+import me.yunhui.catalog.domain.model.CatalogItem;
+import me.yunhui.catalog.domain.repository.CatalogDocumentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
