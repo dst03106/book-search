@@ -7,6 +7,7 @@
 - [기술 스택 및 선택 이유](#기술-스택-및-선택-이유)
 - [아키텍처 결정 사항](#아키텍처-결정-사항)
 - [문제 해결 중 고민 과정](#문제-해결-중-고민-과정)
+- [아쉬웠던 점](#아쉬웠던-점)
 
 ## 프로젝트 설명
 
@@ -318,3 +319,16 @@ GET /api/catalog/popular-keywords
 - spring-boot와 같이 - 문자가 포함된 단어가 실제로는 제외 조건이 아닌 단어 자체를 의미할 수 있음
 ### 2. 인기 검색어 갱신 주기
 - 인기 검색어가 특정 주기마다 갱신되지 않으면, 오래된 검색어가 계속 노출되는 문제가 발생할 수 있음
+
+## 아쉬웠던 점
+- **작업 관리**
+  - AI와 Github MCP를 활용해 작업을 sub-issue 단위로 나누지 못한 점이 아쉬웠음
+  - ref: [(채널톡 기술블로그) Context Engineering? 원래 하던거 아닌가?](https://channel.io/ko/team/blog/articles/tech-context-engineering-230bfaa5)
+- **AI가 작성한 코드 이해 및 활용**
+  - 다이어그램을 활용해 현재 구조(AS-IS)와 개선된 구조(TO-BE)를 비교하면 개선 포인트를 더 직관적으로 파악할 수 있었을 것
+  - 역질문(prompt refinement) 관련 설정을 추가했다면, 불명확하게 전달된 맥락을 보완하고 설계 상 놓칠 수 있는 포인트를 더 잘 짚어낼 수 있었을 것
+  - ref: [(채널톡 기술블로그) Cursor 전사 도입 6개월: 이후 변화들](https://channel.io/ko/team/blog/articles/tech-cursor-implementation-d35d88c4)
+- **Spring 설정 흐름에 대한 이해 부족**
+  - 통합 테스트 시 `TestContainer`나 docker 기반 개발환경에서 설정이 자동으로 연결될 것이라 예상했으나, 실제로는 `Config`에서 덮어쓰여 별도 설정 코드가 필요했음
+  - ex: `@SpringBootTest`의 `random port` 옵션이나, `docker-compose`의 spring 관련 redis 환경 변수를 단순히 설정하는 것으로는 충분하지 않았음
+  - TODO: Spring 설정이 적용되는 흐름을 체계적으로 정리하고, 관련 기술 블로그 글 작성 (다음에는 어떻게 파악할지에 대한 내용도 있으면 좋음)
