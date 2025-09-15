@@ -5,6 +5,9 @@ import me.yunhui.catalog.domain.service.SearchStrategy;
 import me.yunhui.catalog.domain.vo.Pagination;
 import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import me.yunhui.catalog.domain.vo.CatalogQueryResult;
+import me.yunhui.catalog.domain.vo.CatalogKeyword;
+
+import java.util.List;
 
 public class OrSearchStrategy implements SearchStrategy {
     
@@ -16,11 +19,13 @@ public class OrSearchStrategy implements SearchStrategy {
     
     @Override
     public CatalogQueryResult search(CatalogParsedQuery parsedQuery, Pagination pagination) {
-        return documentRepository.orSearch(
-            parsedQuery.getFirstKeyword().value(),
-            parsedQuery.getSecondKeyword().value(),
-            pagination
-        );
+        List<String> keywords = parsedQuery.getKeywords()
+                .stream()
+                .filter(CatalogKeyword::isIncludedInSearch)
+                .map(CatalogKeyword::value)
+                .toList();
+
+        return documentRepository.orSearch(keywords, pagination);
     }
     
     @Override

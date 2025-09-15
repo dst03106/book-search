@@ -5,6 +5,9 @@ import me.yunhui.catalog.domain.service.SearchStrategy;
 import me.yunhui.catalog.domain.vo.Pagination;
 import me.yunhui.catalog.domain.entity.CatalogParsedQuery;
 import me.yunhui.catalog.domain.vo.CatalogQueryResult;
+import me.yunhui.catalog.domain.vo.CatalogKeyword;
+
+import java.util.List;
 
 public class NotSearchStrategy implements SearchStrategy {
     
@@ -16,11 +19,19 @@ public class NotSearchStrategy implements SearchStrategy {
     
     @Override
     public CatalogQueryResult search(CatalogParsedQuery parsedQuery, Pagination pagination) {
-        return documentRepository.notSearch(
-            parsedQuery.getFirstKeyword().value(),
-            parsedQuery.getSecondKeyword().value(),
-            pagination
-        );
+        List<String> includeKeywords = parsedQuery.getKeywords()
+                .stream()
+                .filter(CatalogKeyword::isIncludedInSearch)
+                .map(CatalogKeyword::value)
+                .toList();
+
+        List<String> excludeKeywords = parsedQuery.getKeywords()
+                .stream()
+                .filter(keyword -> !keyword.isIncludedInSearch())
+                .map(CatalogKeyword::value)
+                .toList();
+
+        return documentRepository.notSearch(includeKeywords, excludeKeywords, pagination);
     }
     
     @Override
