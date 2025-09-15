@@ -38,34 +38,33 @@ public class CatalogDocumentRepositoryImpl implements CatalogDocumentRepository 
     }
     
     @Override
-    public CatalogQueryResult orSearch(String keyword1, String keyword2, Pagination pagination) {
+    public CatalogQueryResult orSearch(List<String> keywords, Pagination pagination) {
         Page<CatalogDocument> page = elasticsearchRepository.orSearch(
-            keyword1, 
-            keyword2,
+            keywords,
             PageRequest.of(pagination.page(), pagination.size())
         );
-        
+
         List<CatalogItem> items = page.getContent()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
-        
+
         return new CatalogQueryResult(items, page.getTotalElements());
     }
     
     @Override
-    public CatalogQueryResult notSearch(String includeKeyword, String excludeKeyword, Pagination pagination) {
+    public CatalogQueryResult notSearch(List<String> includeKeywords, List<String> excludeKeywords, Pagination pagination) {
         Page<CatalogDocument> page = elasticsearchRepository.notSearch(
-            includeKeyword, 
-            excludeKeyword,
+            includeKeywords,
+            excludeKeywords,
             PageRequest.of(pagination.page(), pagination.size())
         );
-        
+
         List<CatalogItem> items = page.getContent()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
-        
+
         return new CatalogQueryResult(items, page.getTotalElements());
     }
     
