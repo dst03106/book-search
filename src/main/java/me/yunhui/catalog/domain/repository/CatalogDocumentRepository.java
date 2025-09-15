@@ -9,9 +9,9 @@ public interface CatalogDocumentRepository {
     
     CatalogQueryResult smartSearch(String query, Pagination pagination);
     
-    CatalogQueryResult orSearch(String keyword1, String keyword2, Pagination pagination);
-    
-    CatalogQueryResult notSearch(String includeKeyword, String excludeKeyword, Pagination pagination);
+    CatalogQueryResult orSearch(List<String> keywords, Pagination pagination);
+
+    CatalogQueryResult notSearch(List<String> includeKeywords, List<String> excludeKeywords, Pagination pagination);
     
     void saveAll(Iterable<CatalogItem> items);
 }
